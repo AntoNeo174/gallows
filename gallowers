@@ -7,16 +7,16 @@ public class Main {
         Scanner scan=new Scanner(fr);
         String i1[]=new String[40000];
         int words=0;
-        while (scan.hasNextLine()){
+        while (scan.hasNextLine()){ //формируем массив слов
             i1[words]=scan.nextLine();
             i1[words]=i1[words].toUpperCase();
             words++;
         }
         System.out.println(words +" слов");
-        System.out.println("[N]ew game or [E]xit");
-        char a1[] = sc.next().toUpperCase().toCharArray();
+        System.out.println("[N]ew game or [E]xit"); //предлагаем начать игру или выйти
+        char a1[] = sc.next().toUpperCase().toCharArray(); //считываем ответ игрока. Переводим в заглавные буквы и разбиваем на массив символов.
         if (a1[0] == 'N') {
-            int rW=(int) (Math.random()*words);
+            int rW=(int) (Math.random()*words); //происходит случайный выбор слова
             int zWl=i1[rW].length();
             char[] zW=i1[rW].toCharArray();
             game(zW, zWl);
@@ -29,7 +29,7 @@ public class Main {
     public static void game (char zW[], int zWl){
         Scanner sc=new Scanner(System.in);
        char uW[]=new char[zWl];
-            for (int q=0;q<zWl;q++){
+            for (int q=0;q<zWl;q++){ //создаём пустой массив который будет заполняться угаданными буквами
                 uW[q]='*';
                 System.out.print(uW[q]);
         }
@@ -37,22 +37,22 @@ public class Main {
             System.out.println("\n введите букву");
             int r=0;
             String b=sc.nextLine().toUpperCase();
-            char c[]=b.toCharArray();
+            char c[]=b.toCharArray(); //Выделяем первую букву из введённой строки
 
-            for (int w=0;w<zWl;){
+            for (int w=0;w<zWl;){ // Проверяем совпадает ли введённая буква с буквами из загаданного слова
                      if (c[0]==zW[w]){uW[w]=c[0];
                      zW[w]=0;;}
-                     else {r++;
+                     else {r++; //если буква не совпала с № буквой добавляем счётчик "несовпадений"
                      }
                 System.out.print(uW[w]);
                 w++;
             }
 
-            if (r==zWl){e++;
+            if (r==zWl){e++;//если буква прошла полный цикл и количество "несовпадений" равно длине слова - добавляем счётчик ошибок
                 System.out.println("\n У вас осталось "+(6-e)+" ошибок");}
 
 
-            if (e==6) {System.out.println("Вы проиграли");
+            if (e==6) {System.out.println("Вы проиграли"); //когда количество ошибок достигает 6 игра окончена
                 break;}
         }
     }
