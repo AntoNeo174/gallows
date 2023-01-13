@@ -1,0 +1,59 @@
+import java.io.*;
+import java.util.Scanner;
+public class Main {
+    public static void main(String[] args) {try {
+        Scanner sc = new Scanner(System.in);
+        FileReader fr= new FileReader("word.txt");
+        Scanner scan=new Scanner(fr);
+        String i1[]=new String[40000];
+        int words=0;
+        while (scan.hasNextLine()){
+            i1[words]=scan.nextLine();
+            i1[words]=i1[words].toUpperCase();
+            words++;
+        }
+        System.out.println(words +" слов");
+        System.out.println("[N]ew game or [E]xit");
+        char a1[] = sc.next().toUpperCase().toCharArray();
+        if (a1[0] == 'N') {
+            int rW=(int) (Math.random()*words);
+            int zWl=i1[rW].length();
+            char[] zW=i1[rW].toCharArray();
+            game(zW, zWl);
+        } else System.out.println("Досвидания");
+
+    }
+    catch (Exception ex){System.out.println("ошибка");}
+    }
+
+    public static void game (char zW[], int zWl){
+        Scanner sc=new Scanner(System.in);
+       char uW[]=new char[zWl];
+            for (int q=0;q<zWl;q++){
+                uW[q]='*';
+                System.out.print(uW[q]);
+        }
+        for (int e=0;e<zWl;){
+            System.out.println("\n введите букву");
+            int r=0;
+            String b=sc.nextLine().toUpperCase();
+            char c[]=b.toCharArray();
+
+            for (int w=0;w<zWl;){
+                     if (c[0]==zW[w]){uW[w]=c[0];
+                     zW[w]=0;;}
+                     else {r++;
+                     }
+                System.out.print(uW[w]);
+                w++;
+            }
+
+            if (r==zWl){e++;
+                System.out.println("\n У вас осталось "+(6-e)+" ошибок");}
+
+
+            if (e==6) {System.out.println("Вы проиграли");
+                break;}
+        }
+    }
+}
