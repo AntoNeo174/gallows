@@ -1,71 +1,91 @@
 import java.io.*;
 import java.util.Scanner;
+
 public class Main {
-    public static void main(String[] args) {try {
-        Scanner sc = new Scanner(System.in);
-        FileReader fr= new FileReader("word.txt");
-        Scanner scan=new Scanner(fr);
-        String i1[]=new String[40000];
-        int words=0;
-        while (scan.hasNextLine()){ //формируем массив слов
-            i1[words]=scan.nextLine();
-            i1[words]=i1[words].toUpperCase();
-            words++;
+    public static void main(String[] args) {
+        try {
+            Scanner sc = new Scanner(System.in);
+            FileReader fr = new FileReader("word.txt");
+            Scanner scan = new Scanner(fr);
+            String i1[] = new String[40000];
+            int words = 0;
+            while (scan.hasNextLine()) { // формируем массив слов
+                i1[words] = scan.nextLine();
+                i1[words] = i1[words].toUpperCase();
+                words++;
+            }
+            System.out.println(words + " слов");
+            System.out.println("[N]ew game or [E]xit"); // предлагаем начать игру или выйти
+            char a1[] = sc.next().toUpperCase().toCharArray(); // считываем ответ игрока. Переводим в заглавные буквы и
+            // разбиваем на массив символов.
+            if (a1[0] == 'N') {
+                int rW = (int) (Math.random() * words); // происходит случайный выбор слова
+                int zWl = i1[rW].length();
+                char[] zW = i1[rW].toCharArray();
+                String ansver=i1[words];
+                game(zW, zWl, ansver);
+            } else
+                System.out.println("Досвидания");
+
+        } catch (Exception ex) {
+            System.out.println("ошибка");
         }
-        System.out.println(words +" слов");
-        System.out.println("[N]ew game or [E]xit"); //предлагаем начать игру или выйти
-        char a1[] = sc.next().toUpperCase().toCharArray(); //считываем ответ игрока. Переводим в заглавные буквы и разбиваем на массив символов.
-        if (a1[0] == 'N') {
-            int rW=(int) (Math.random()*words); //происходит случайный выбор слова
-            int zWl=i1[rW].length();
-            char[] zW=i1[rW].toCharArray();
-            game(zW, zWl);
-        } else System.out.println("Досвидания");
-
-    }
-    catch (Exception ex){System.out.println("ошибка");}
     }
 
-    public static void game (char zW[], int zWl){
-        Scanner sc=new Scanner(System.in);
-        char uW[]=new char[zWl];
-        int p=0;
-        for (int q=0;q<zWl;q++){ //создаём пустой массив который будет заполняться угаданными буквами
-            uW[q]='*';
+    public static void game(char zW[], int zWl, String ansver) {
+        Scanner sc = new Scanner(System.in);
+        char uW[] = new char[zWl];
+        int p = 0;
+        for (int q = 0; q < zWl; q++) { // создаём пустой массив который будет заполняться угаданными буквами
+            uW[q] = '*';
             System.out.print(uW[q]);
         }
-        for (int e=0;e<zWl;){
-            if (p==zWl){System.out.println("вы выиграли!");
-            break;}
+        for (int e = 0; e < zWl;) {
+            if (p == zWl) {
+                System.out.println("вы выиграли!");
+                break;
+            }
             System.out.println("\n введите букву");
-            int r=0;
-            String b=sc.nextLine().toUpperCase();
-            char c[]=b.toCharArray(); //Выделяем первую букву из введённой строки
+            int r = 0;
+            String b = sc.nextLine().toUpperCase();
+            char c[] = b.toCharArray(); // Выделяем первую букву из введённой строки
 
-            for (int w=0;w<zWl;){ // Проверяем совпадает ли введённая буква с буквами из загаданного слова
-                if (c[0]==zW[w])
-                {uW[w]=c[0];
-                    zW[w]=0;
+            for (int w = 0; w < zWl;) { // Проверяем совпадает ли введённая буква с буквами из загаданного слова
+                if (c[0] == zW[w]) {
+                    uW[w] = c[0];
+                    zW[w] = 0;
                     p++;
-                }
-                else {r++; //если буква не совпала с № буквой добавляем счётчик "несовпадений"
+                } else {
+                    r++;
+                    // если буква не совпала с № буквой добавляем счётчик "несовпадений"
                 }
                 System.out.print(uW[w]);
+
                 w++;
             }
-            if (r==zWl) {
-                e++;//если буква прошла полный цикл и количество "несовпадений" равно длине слова - добавляем счётчик ошибок
-                switch (6-e){
-                    case 5: System.out.println("\n У вас осталось " + (6 - e) + " ошибок"); break;
-                    case 4,3,2: System.out.println("\n У вас осталось " + (6 - e) + " ошибки"); break;
-                    case 1: System.out.println("\n У вас осталось " + (6 - e) + " ошибка"); break;
+
+            if (r == zWl) {
+                e++;
+                System.out.println("\n Упс, такой бувы нет!");// если буква прошла полный цикл и количество "несовпадений" равно длине слова - добавляем счётчик ошибок
+                switch (6 - e) {
+                    case 5:
+                        System.out.println("\n У вас осталось " + (6 - e) + " ошибок");
+                        break;
+                    case 4, 3, 2:
+                        System.out.println("\n У вас осталось " + (6 - e) + " ошибки");
+                        break;
+                    case 1:
+                        System.out.println("\n У вас осталось " + (6 - e) + " ошибка");
+                        break;
 
                 }
             }
 
-
-            if (e==6) {System.out.println("Вы проиграли"); //когда количество ошибок достигает 6 игра окончена
-                break;}
+            if (e == 6) {
+                System.out.println("Вы проиграли");// когда количество ошибок достигает 6 игра окончена
+                for (int z=0;z<zWl;z++){System.out.print("загаданное слово было "+ansver);}
+                break;
+            }
         }
     }
 }
