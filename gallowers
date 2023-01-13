@@ -28,22 +28,28 @@ public class Main {
 
     public static void game (char zW[], int zWl){
         Scanner sc=new Scanner(System.in);
-       char uW[]=new char[zWl];
-            for (int q=0;q<zWl;q++){ //создаём пустой массив который будет заполняться угаданными буквами
-                uW[q]='*';
-                System.out.print(uW[q]);
+        char uW[]=new char[zWl];
+        int p=0;
+        for (int q=0;q<zWl;q++){ //создаём пустой массив который будет заполняться угаданными буквами
+            uW[q]='*';
+            System.out.print(uW[q]);
         }
         for (int e=0;e<zWl;){
+            if (p==zWl){System.out.println("вы выиграли!");
+            break;}
             System.out.println("\n введите букву");
             int r=0;
             String b=sc.nextLine().toUpperCase();
             char c[]=b.toCharArray(); //Выделяем первую букву из введённой строки
 
             for (int w=0;w<zWl;){ // Проверяем совпадает ли введённая буква с буквами из загаданного слова
-                     if (c[0]==zW[w]){uW[w]=c[0];
-                     zW[w]=0;;}
-                     else {r++; //если буква не совпала с № буквой добавляем счётчик "несовпадений"
-                     }
+                if (c[0]==zW[w])
+                {uW[w]=c[0];
+                    zW[w]=0;
+                    p++;
+                }
+                else {r++; //если буква не совпала с № буквой добавляем счётчик "несовпадений"
+                }
                 System.out.print(uW[w]);
                 w++;
             }
