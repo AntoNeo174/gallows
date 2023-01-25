@@ -2,90 +2,222 @@ import java.io.*;
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) {
-        try {
-            Scanner sc = new Scanner(System.in);
-            FileReader fr = new FileReader("word.txt");
-            Scanner scan = new Scanner(fr);
-            String i1[] = new String[40000];
-            int words = 0;
-            while (scan.hasNextLine()) { // формируем массив слов
-                i1[words] = scan.nextLine();
-                i1[words] = i1[words].toUpperCase();
-                words++;
-            }
-            System.out.println(words + " слов");
-            System.out.println("[N]ew game or [E]xit"); // предлагаем начать игру или выйти
-            char a1[] = sc.next().toUpperCase().toCharArray(); // считываем ответ игрока. Переводим в заглавные буквы и
-            // разбиваем на массив символов.
-            if (a1[0] == 'N') {
-                int rW = (int) (Math.random() * words); // происходит случайный выбор слова
-                int zWl = i1[rW].length();
-                char[] zW = i1[rW].toCharArray();
-                String ansver=i1[words];
-                game(zW, zWl, ansver);
-            } else
-                System.out.println("Досвидания");
+    static public int countUsedLetters = 0;
+    static public char usedLetters[] = new char[33];
+    static public  int foundSymbol = 0;
 
-        } catch (Exception ex) {
-            System.out.println("ошибка");
+    static void  printErrors(int errors){
+       switch (errors) {
+           case 5: System.out.println
+                   ("\n|   " +
+                           "\n|   " +
+                           "\n|   " +
+                           "\n|   " +
+                           "\n|   " +
+                           "\n|    "); break;
+           case 4:System.out.println
+                   ("\n ___" +
+                           "\n|/  | " +
+                           "\n|   " +
+                           "\n|   " +
+                           "\n|   " +
+                           "\n|   " +
+                           "\n|    "); break;
+           case 3:System.out.println
+                   ("\n ___" +
+                           "\n|/  | " +
+                           "\n|   *" +
+                           "\n|   " +
+                           "\n|   " +
+                           "\n|   " +
+                           "\n|    "); break;
+           case 2:System.out.println
+                   ("\n ___" +
+                           "\n|/  | " +
+                           "\n|   *" +
+                           "\n|  /|| " +
+                           "\n|   " +
+                           "\n|   " +
+                           "\n|    "); break;
+           case 1:System.out.println
+                   ("\n ___" +
+                           "\n|/  | " +
+                           "\n|   *" +
+                           "\n|  /|| " +
+                           "\n|   |" +
+                           "\n|   " +
+                           "\n|    "); break;
+           case 0: System.out.println
+("\n ___" +
+ "\n|/  | " +
+ "\n|   *" +
+ "\n|  /|| " +
+ "\n|   |" +
+ "\n|   ||" +
+ "\n|    "); break;
+           default: break;
+
+       }
+
+
+    }
+    static char readerKeybord() {
+        Scanner sc = new Scanner(System.in);
+        String a = sc.nextLine();
+                if (a.isEmpty()) {System.out.println("Вы ничего не ввели \n Пожалуйста, введите команду");
+
+                return readerKeybord();}
+        else {a = a.toUpperCase();
+            char b[] = a.toCharArray();
+                        return b[0];}
+
+
+
+    }
+
+    static void menu(int wordsCount, String librar[]) {
+        System.out.println("\n[N]ew game or [E]xit");
+
+        switch (readerKeybord()) {
+            case 'N':
+                countUsedLetters = 0;
+                int errorCount=0;
+                foundSymbol = 0;
+                for (int g=0;g<usedLetters.length;g++){
+                    usedLetters[g] =0;
+                }
+                int numberRandomWorld = (int) (Math.random() * wordsCount);
+                String ansverWord = librar[numberRandomWorld];
+                char foundWord[]=ansverWord.toCharArray();
+                char secretWord[]=ansverWord.toCharArray();
+                for (int q = 0; q < foundWord.length; q++) {
+                    foundWord[q] = '*';
+                    System.out.print(foundWord[q]);
+                }
+                System.out.println();
+                letterCheck(ansverWord, secretWord, foundWord,errorCount,wordsCount, librar);
+                break;
+
+            case 'E':
+                exit();
+                break;
+
+
+            default:
+                menu(wordsCount, librar);
+                break;
         }
     }
 
-    public static void game(char zW[], int zWl, String ansver) {
-        Scanner sc = new Scanner(System.in);
-        char uW[] = new char[zWl];
-        int p = 0;
-        for (int q = 0; q < zWl; q++) { // создаём пустой массив который будет заполняться угаданными буквами
-            uW[q] = '*';
-            System.out.print(uW[q]);
+    static void exit() {
+    }
+    static public void usedLetters(){
+        System.out.print("\n Вы использовали буквы:");
+        for (int k=0;k<countUsedLetters;k++){
+
+            System.out.print(String.valueOf(usedLetters[k])+" ");
         }
-        for (int e = 0; e < zWl;) {
-            if (p == zWl) {
-                System.out.println("вы выиграли!");
-                break;
+
+    }
+
+    static void letterCheck(String ansverWord, char[] secretWord, char[] foundWord, int errorCount, int wordsCount, String[] librar) {
+       if (countUsedLetters>0) usedLetters();
+
+        System.out.print("\nВвведите букву \n");
+
+        char letter = readerKeybord();
+
+
+        if (letter == 0) {
+            System.out.println("вы ничего не ввели");
+            letterCheck(ansverWord, secretWord, foundWord,errorCount,wordsCount, librar );
+        }
+
+         if (letter<='Z') {
+               System.out.println("не корректный символ, попробуйте снова!");
+             letterCheck(ansverWord, secretWord, foundWord,errorCount,wordsCount, librar);
+           }
+
+        for (int count = 0; count < countUsedLetters; count++) {
+            if (letter == usedLetters[count]) {
+                System.out.println("Вы уже вводили эту букву");
+                letterCheck(ansverWord, secretWord, foundWord,errorCount,wordsCount, librar);
             }
-            System.out.println("\n введите букву");
-            int r = 0;
-            String b = sc.nextLine().toUpperCase();
-            char c[] = b.toCharArray(); // Выделяем первую букву из введённой строки
+        }
+        int enumeration = 0;
 
-            for (int w = 0; w < zWl;) { // Проверяем совпадает ли введённая буква с буквами из загаданного слова
-                if (c[0] == zW[w]) {
-                    uW[w] = c[0];
-                    zW[w] = 0;
-                    p++;
-                } else {
-                    r++;
-                    // если буква не совпала с № буквой добавляем счётчик "несовпадений"
-                }
-                System.out.print(uW[w]);
+        usedLetters[countUsedLetters]=letter;
 
-                w++;
+
+        countUsedLetters++;
+
+        for (int count = 0; count < ansverWord.length(); count++) { // Проверяем совпадает ли введённая буква с буквами из загаданного слова
+            if (letter == secretWord[count]) {
+                foundWord[count] = letter;
+                secretWord[count] = 0;
+                foundSymbol++;
+                enumeration--;
+
+
+            } else {
+                enumeration++;
+                // если буква не совпала с № буквой добавляем счётчик "несовпадений"
             }
+            System.out.print(foundWord[count]);
+        }
 
-            if (r == zWl) {
-                e++;
-                System.out.println("\n Упс, такой бувы нет!");// если буква прошла полный цикл и количество "несовпадений" равно длине слова - добавляем счётчик ошибок
-                switch (6 - e) {
-                    case 5:
-                        System.out.println("\n У вас осталось " + (6 - e) + " ошибок");
-                        break;
-                    case 4, 3, 2:
-                        System.out.println("\n У вас осталось " + (6 - e) + " ошибки");
-                        break;
-                    case 1:
-                        System.out.println("\n У вас осталось " + (6 - e) + " ошибка");
-                        break;
 
-                }
+
+        if (enumeration == secretWord.length) {
+            errorCount++;
+            System.out.println("\n Упс, такой бувы нет!");// если буква прошла полный цикл и количество "несовпадений" равно длине слова - добавляем счётчик ошибок
+            switch (6 - errorCount) {
+                case 5:
+                    System.out.println("\n У вас осталось " + (6 - errorCount) + " ошибок");
+                    printErrors(6 - errorCount);
+                    break;
+                case 4, 3, 2:
+                    System.out.println("\n У вас осталось " + (6 - errorCount) + " ошибки");
+                    printErrors(6 - errorCount);
+                    break;
+                case 1:
+                    System.out.println("\n У вас осталось " + (6 - errorCount) + " ошибка");
+                    printErrors(6 - errorCount);
+                    break;
             }
+        }
+System.out.println();
 
-            if (e == 6) {
-                System.out.println("Вы проиграли");// когда количество ошибок достигает 6 игра окончена
-                for (int z=0;z<zWl;z++){System.out.print("загаданное слово было "+ansver);}
-                break;
+        if (errorCount == 6) {
+            System.out.println("Вы проиграли");// когда количество ошибок достигает 6 игра окончена
+
+            System.out.print("Загаданное слово было " + ansverWord+"\n");
+            menu(wordsCount, librar);
+        }
+            letterCheck(ansverWord, secretWord, foundWord,errorCount, wordsCount, librar );
+    }
+
+
+
+
+    public static void main(String[] args) {
+
+
+        try {
+            FileReader fr = new FileReader("word.txt");
+            Scanner scan = new Scanner(fr);
+            int wordsCount = 0;
+            String librar[] =new String[40000];
+            while (scan.hasNextLine()) {
+                librar[wordsCount]=scan.nextLine();
+                librar[wordsCount] = librar[wordsCount].toUpperCase();
+                wordsCount++;
             }
+            System.out.print(wordsCount + " слов");
+
+            menu(wordsCount, librar);
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
     }
 }
